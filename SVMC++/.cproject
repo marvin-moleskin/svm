@@ -126,13 +126,13 @@
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.704263968;cdt.managedbuild.config.gnu.exe.debug.704263968.;cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.359967136;cdt.managedbuild.tool.gnu.cpp.compiler.input.1195966587">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile"/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.704263968;cdt.managedbuild.config.gnu.exe.debug.704263968.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1889103496;cdt.managedbuild.tool.gnu.c.compiler.input.212046843">
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.release.608869929;cdt.managedbuild.config.gnu.exe.release.608869929.;cdt.managedbuild.tool.gnu.cpp.compiler.exe.release.710072034;cdt.managedbuild.tool.gnu.cpp.compiler.input.572464736">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.release.608869929;cdt.managedbuild.config.gnu.exe.release.608869929.;cdt.managedbuild.tool.gnu.c.compiler.exe.release.10197127;cdt.managedbuild.tool.gnu.c.compiler.input.1093026274">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.release.608869929;cdt.managedbuild.config.gnu.exe.release.608869929.;cdt.managedbuild.tool.gnu.cpp.compiler.exe.release.710072034;cdt.managedbuild.tool.gnu.cpp.compiler.input.572464736">
+		<scannerConfigBuildInfo instanceId="cdt.managedbuild.config.gnu.exe.debug.704263968;cdt.managedbuild.config.gnu.exe.debug.704263968.;cdt.managedbuild.tool.gnu.c.compiler.exe.debug.1889103496;cdt.managedbuild.tool.gnu.c.compiler.input.212046843">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
