@@ -1,0 +1,233 @@
+
+function retval = trainsvm(tVectors, tClassVals)
+
+ 	# can be separated to a function one day
+ 	quadraticMatrix = [];
+
+	for rowNo = 1:size(tVectors)(1)
+		for colNo = 1:size(tVectors)(1)
+
+			yFst = tClassVals(rowNo);
+			ySnd = tClassVals(colNo);
+
+			xFst = tVectors(rowNo, :);
+			xSnd = tVectors(colNo, :);
+
+			xFst = xFst';
+			xSnd = xSnd';
+
+			dotProd = dot(xFst, xSnd);
+
+			val = yFst * ySnd * dotProd;
+
+			quadraticMatrix(rowNo, colNo) = val;
+		end;
+	end;	
+
+	[w, b] = svmSolverQP(quadraticMatrix, tVectors, tClassVals);
+
+
+	xDim = linspace(0, 20);
+	w1 = w(1);
+	w2 = w(2);
+	line = (-w1*xDim - b)/w2;
+	#line = [3.7332; 15.64445]*xDim + b;
+
+	figure;
+	hold on
+	for i = 1:size(tVectors)(1)
+		if (tClassVals(i) == 1) 
+			tVector = tVectors(i, :);
+			plot(tVector(1), tVector(2), "x");
+		else
+			tVector = tVectors(i, :);
+			plot(tVector(1), tVector(2), "o");
+		endif;		
+	end;
+	plot(xDim, line);
+	axis([0, 10, 0, 10]);
+	hold off
+
+ endfunction
+
+ function [w, b] = svmSolverQP(quadraticMatrix, tVectors, tClassVals) 
+
+	precision = 0.00001; 
+
+ 	# set inital solution guess vector
+ 	wInit = [];
+ 	for i = 1:size(tClassVals)
+  		wInit(i) = 0;
+	endfor
+	wInit = wInit';
+	disp(wInit);
+	printf("\n");
+
+
+ 	# set vector q to -1
+ 	q = [];
+ 	for i = 1:size(tClassVals)
+  		q(i) = -1;
+	endfor
+	q = q';
+	disp(q);
+	printf("\n");
+
+
+	#set matrix A
+	A = [];
+	for i = 1:size(tClassVals)
+		A = tClassVals';
+	endfor
+	disp(A);
+	printf("\n");
+
+	#set b
+	b = 0;
+
+	#create zero lower bound
+	lowerBound = [];
+	for i = 1:size(tClassVals)
+		lowerBound(i) = 0;
+	endfor
+	lowerBound = lowerBound';
+
+ 	[X, OBJ, INFO, LAMBDA] = qp(wInit, quadraticMatrix, q, A, b, lowerBound, []);
+
+ 	printf("X:");
+ 	disp(X);
+
+ 	alpha = X;
+
+ 	# use precision to zero very small alphas
+ 	for i = 1:size(alpha)
+ 		if (alpha(i) < precision) 
+ 			alpha(i) = 0;
+ 		endif;
+	endfor
+
+ 	printf("Solution\n");
+
+ 	disp(alpha);
+ 	printf("\n");
+
+ 	disp(OBJ);
+ 	printf("\n");
+
+ 	disp(INFO);
+ 	printf("\n");
+
+
+ 	printf("lambda");
+ 	disp(LAMBDA);
+ 	printf("\n");
+
+ 	w = getWFromAlpha(alpha, tVectors, tClassVals);
+ 	disp("value of w: "), disp(w);
+
+ 	b = getBFromW(w, alpha, tVectors, tClassVals);
+ 	disp("value of b: "), disp(b);
+
+ endfunction
+
+
+ function w = getWFromAlpha(alpha, tVectors, tClassVals) 
+
+ 	# w = sum (over training samples) of yN * alphaN * tVector
+
+ 	w = [];
+ 	for i = 1:size(tVectors)(2)
+ 		w(i) = 0;
+ 	endfor
+ 	w = w';
+
+ 	printf("zeroing w:\n");
+ 	disp(w);
+ 	printf("\n");
+
+ 	for i = 1:size(tClassVals)
+ 		term = tClassVals(i) * alpha(i) * (tVectors(i, :)')
+		w = w + term
+	endfor
+
+ endfunction
+
+
+ function b = getBFromW(w, alpha, tVectors, tClassVals) 
+
+ 	printf("Size of alpha: \n");
+ 	disp(size(alpha)(1));
+ 	printf("\n");
+
+	for i = 1:size(alpha)(1)
+ 		if (alpha(i) != 0)  
+
+ 			printf("found support vector: %d", i);
+ 			tVector = tVectors(i, :);
+ 			printf("\n");
+
+			tVector = tVector';
+ 			printf("vector itself: \n");
+ 			disp(tVector);
+ 			
+ 			tClassVal = tClassVals(i);
+ 			printf("%d\n", tClassVal);
+ 			b = (1.0 / tClassVal) - dot(w, tVector);
+ 			return;
+ 		endif;
+	endfor
+
+ endfunction
+
+ function [tVectors, tClassVals] = getTData1
+ 	tVectors = [1, 1; 2, 2; 3, 5];
+ 	tClassVals = [1; -1; -1];
+ endfunction
+
+ function [tVectors, tClassVals] = getTData2
+ 	tVectors = [0.5, 1.3; 0.75, 2; 1, 0.6; 1.25, 1.4; 0.4, 3.2; 1.8, 3.1; 2.5, 1.8; 3.6, 0.8];
+ 	tClassVals = [-1; -1; -1; -1; 1; 1; 1; 1];
+ endfunction
+
+  function [tVectors, tClassVals] = getTData3
+ 	tVectors = [0.75, 2; 1.25, 1.4; 0.4, 3.2; 1.8, 3.1; 2.5, 1.8];
+ 	tClassVals = [-1; -1; 1; 1; 1];
+ endfunction
+
+ function plot3dExample
+
+ 	figure(1);
+ 	hold on;
+
+ 	axis([0; 7; 0; 7; 0; 7]);
+
+ 	xlabel('x');
+ 	ylabel('y');
+ 	zlabel('z');
+
+ 	title("3d svm");
+
+ 	plot3(1, 1, 2, 'x');
+ 	plot3(3, 2, 2.5, 'x');
+ 	plot3(5, 4, 1, 'x');
+ 	plot3(2, 2, 5.2, 'o');
+ 	plot3(2, 3, 6, 'o');
+ 	plot3(2.5, 2.5, 6, 'o');
+
+
+ 	[x, y] = meshgrid(linspace(0, 7, 10));
+
+ 	w1 = -0.183295;
+ 	w2 = 0.0301624;
+ 	w3 = 0.672854;
+ 	b = -2.19258;
+
+ 	z = -(w1*x + w2*y + b)/w3;
+
+ 	surf(x, y, z);
+ 	#mesh(x, y, z);
+ 	shading faceted
+
+ 	hold off;
+
+ endfunction
